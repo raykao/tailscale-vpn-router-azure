@@ -1,0 +1,15 @@
+#cloud-config
+
+runcmd:
+  - [ sh, -c, "curl -fsSL https://tailscale.com/install.sh | sh" ]
+  - [ sh, -c, "echo '[Unit]\nDescription=Tailscale\nAfter=network.target\n\n[Service]\nExecStart=/usr/bin/tailscale up\nRestart=on-failure\nUser=root\n\n[Install]\nWantedBy=multi-user.target' > /etc/systemd/system/tailscale.service" ]
+  - [ sh, -c, "systemctl daemon-reload" ]
+  - [ sh, -c, "systemctl enable tailscale" ]
+
+#cloud-config
+
+runcmd:
+    - [ sh, -c, "curl -fsSL https://tailscale.com/install.sh | sh" ]
+    - [ sh, -c, "echo '${systemd_unit}' | base64 -d > /etc/systemd/system/tailscale.service" ]
+    - [ sh, -c, "systemctl daemon-reload" ]
+    - [ sh, -c, "systemctl enable tailscale" ]
